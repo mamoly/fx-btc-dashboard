@@ -115,7 +115,7 @@ let currentDays = 30;
 const PAIRS = [
   { id: 'btcusd', title: 'BTC / USD', prefix: '$', decimals: 0 },
   { id: 'usdjpy', title: 'USD / JPY', prefix: '¥', decimals: 2 },
-  { id: 'thbusd', title: 'THB / USD', prefix: '$', decimals: 4 },
+  { id: 'usdthb', title: 'USD / THB', prefix: '฿', decimals: 2 },
   { id: 'thbjpy', title: 'THB / JPY', prefix: '¥', decimals: 3 },
 ];
 
@@ -145,7 +145,7 @@ async function fetchForex(days) {
   const data = await res.json();
 
   const usdjpy = [];
-  const thbusd = [];
+  const usdthb = [];
   const thbjpy = [];
 
   for (const [dateStr, rates] of Object.entries(data.rates)) {
@@ -154,12 +154,12 @@ async function fetchForex(days) {
     const thb = rates.THB;
     if (jpy) usdjpy.push({ date, value: jpy });
     if (thb) {
-      thbusd.push({ date, value: 1 / thb });
+      usdthb.push({ date, value: thb });
       if (jpy) thbjpy.push({ date, value: jpy / thb });
     }
   }
 
-  return { usdjpy, thbusd, thbjpy };
+  return { usdjpy, usdthb, thbjpy };
 }
 
 function getColor(data) {
@@ -270,7 +270,7 @@ async function loadAll(days) {
     const allData = {
       btcusd: btcData,
       usdjpy: forexData.usdjpy,
-      thbusd: forexData.thbusd,
+      usdthb: forexData.usdthb,
       thbjpy: forexData.thbjpy,
     };
 
